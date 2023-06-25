@@ -15,6 +15,7 @@
 #include "compress.hpp"
 #include "decompress.hpp"
 #include "Slice.hpp"
+#include "timer.hpp"
 
 using namespace std;
 
@@ -222,10 +223,16 @@ int main(int argc, char *argv[])
     /***************************/
 
     double *data = NULL;
-    if (input_flag)
+    if (input_flag){
+        Timer timer(true);
         data = compress(d, input_file, compressed_file, io_type, target, target_value, skip_bytes, verbose_flag, debug_flag);
-    if (output_flag)
+        timer.stop("Compression");
+    }
+    if (output_flag){
+        Timer timer(true);
         decompress(d, compressed_file, output_file, data, cutout, autocrop_flag, verbose_flag, debug_flag);
+        timer.stop("Decompression");
+    }
     delete[] data;
 
     return 0;
